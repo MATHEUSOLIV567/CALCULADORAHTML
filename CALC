@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calculadora</title>
+  <style>
+    /* CSS Personalizado */
+    .calculator-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f2f2f2;
+    }
+
+    .calculator {
+      width: 300px;
+      border-radius: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .calculator-header {
+      background-color: #eee;
+      padding: 10px;
+      text-align: right;
+      font-size: 20px;
+      position: relative;
+    }
+
+    .calculator-history {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 5px;
+    }
+
+    .calculator-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      max-height: 150px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .calculator-menu.open {
+      display: block;
+    }
+
+    .calculator-menu-item {
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    .calculator-menu-item:hover {
+      background-color: #f2f2f2;
+    }
+
+    .calculator-body {
+      padding: 10px;
+    }
+
+    .calculator-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .calculator-button {
+      flex: 1;
+      margin: 5px;
+      padding: 10px;
+      font-size: 18px;
+      text-align: center;
+      background-color: #f2f2f2;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .calculator-button:hover {
+      background-color: #ccc;
+    }
+
+    .calculator-button.clear {
+      background-color: #d9534f;
+      color: #fff;
+    }
+
+    .calculator-input {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+      border: none;
+      border-bottom: 2px solid #ccc;
+      outline: none;
+    }
+
+    .calculator-input:focus {
+      border-bottom-color: #007bff;
+    }
+
+    /* Fim do CSS Personalizado */
+  </style>
+</head>
+<body>
+  <div class="calculator-container">
+    <div class="calculator">
+      <div class="calculator-header">
+        <div class="calculator-history" id="history"></div>
+        <button class="calculator-button clear" onclick="toggleMenu()">Histórico</button>
+        <div class="calculator-menu" id="menu">
+          <div class="calculator-menu-item" onclick="clearHistory()">Limpar Histórico</div>
+        </div>
+        <input type="text" class="calculator-input" id="display" placeholder="0" disabled>
+      </div>
+      <div class="calculator-body">
+        <div class="calculator-row">
+          <button class="calculator-button clear" onclick="clearLastCharacter()">&#9003;</button>
+          <button class="calculator-button clear" onclick="clearDisplay()">C</button>
+          <button class="calculator-button" onclick="appendOperator('/')">/</button>
+        </div>
+        <div class="calculator-row">
+          <button class="calculator-button" onclick="appendNumber('7')">7</button>
+          <button class="calculator-button" onclick="appendNumber('8')">8</button>
+          <button class="calculator-button" onclick="appendNumber('9')">9</button>
+          <button class="calculator-button" onclick="appendOperator('*')">*</button>
+        </div>
+        <div class="calculator-row">
+          <button class="calculator-button" onclick="appendNumber('4')">4</button>
+          <button class="calculator-button" onclick="appendNumber('5')">5</button>
+          <button class="calculator-button" onclick="appendNumber('6')">6</button>
+          <button class="calculator-button" onclick="appendOperator('-')">-</button>
+        </div>
+        <div class="calculator-row">
+          <button class="calculator-button" onclick="appendNumber('1')">1</button>
+          <button class="calculator-button" onclick="appendNumber('2')">2</button>
+          <button class="calculator-button" onclick="appendNumber('3')">3</button>
+          <button class="calculator-button" onclick="appendOperator('+')">+</button>
+        </div>
+        <div class="calculator-row">
+          <button class="calculator-button" onclick="appendNumber('0')">0</button>
+          <button class="calculator-button" onclick="appendDecimal('.')">.</button>
+          <button class="calculator-button" onclick="calculate()">=</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var display = document.getElementById("display");
+    var history = document.getElementById("history");
+    var menu = document.getElementById("menu");
+    var expression = "";
+    var calculations = [];
+
+    function appendNumber(number) {
+      expression += number;
+      display.value = expression;
+    }
+
+    function appendOperator(operator) {
+      expression += operator;
+      display.value = expression;
+    }
+
+    function appendDecimal(decimal) {
+      if (!expression.includes(decimal)) {
+        expression += decimal;
+        display.value = expression;
+      }
+    }
+
+    function clearDisplay() {
+      expression = "";
+      display.value = "0";
+    }
+
+    function clearLastCharacter() {
+      expression = expression.slice(0, -1);
+      display.value = expression;
+    }
+
+    function calculate() {
+      try {
+        var result = eval(expression);
+        calculations.push(expression + " = " + result);
+        history.innerHTML = calculations.join("<br>");
+        display.value = result;
+        expression = result.toString();
+      } catch (error) {
+        display.value = "Error";
+      }
+    }
+
+    function toggleMenu() {
+      menu.classList.toggle("open");
+    }
+
+    function clearHistory() {
+      calculations = [];
+      history.innerHTML = "";
+    }
+  </script>
+
+  <!-- Direitos autorais -->
+  <div style="text-align: center; margin-top: 20px;">
+    <p style="font-size: 12px; color: #888;">Calculadora criada por PTBR BRASIL</p>
+    <p style="font-size: 12px; color: #888;">&copy; 2023. Todos os direitos reservados.</p>
+  </div>
+</body>
+</html>
